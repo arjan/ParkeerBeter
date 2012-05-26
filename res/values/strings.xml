@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ParkeerBeter</string>
+    <string name="startup_busy">Bezig...</string>
+    <string name="startup_login">Aan het inloggen...</string>
+    <string name="login_needcredentials">Om in te loggen heb je een gebruikersnaam / wachtwoord nodig van smsparkeren.nl.</string>
+    <string name="login_fail">Het inloggen is mislukt...</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Wachtwoord</string>
+    <string name="login_go">Inloggen</string>
+    <string name="login_unexpected">Een onverwachte foutmelding is opgetreden. Probeer het later nog eens.</string>
+    <string name="main_new">Nieuwe parkeeractie</string>
+    <string name="main_current">Huidige parkeeracties</string>
+    <string name="main_zonecode">Zonecode</string>
+    <string name="main_vehicle">Kenteken</string>
+    <string name="main_menu_logout">Uitloggen</string>
+
+</resources>
