@@ -106,21 +106,29 @@ public class ParkeerAPI {
 		return 0;
 	}
 	
-	private Document getRequest(String urlpart) throws ParkeerAPIException {
+	private String getRequest(String urlpart) throws ParkeerAPIException {
 		return getRequest(urlpart, false);
 	}
 	
-	private Document getRequest(String urlpart, boolean retry) throws ParkeerAPIException {
-		Document doc;
+	private String getRequest(String urlpart, boolean retry) throws ParkeerAPIException {
+		String body = "";
+		
 		try {
-			doc = Jsoup.connect(BASE_URL + urlpart)
-				.cookie(getCookieName(), getCookie())
-				.get();
-		} catch (IOException e) {
+
+			HttpGet request = new HttpGet(BASE_URL + urlpart);
+			
+	        request.getParams().setParameter("http.protocol.handle-redirects",false);
+	        request.setHeader("Cookie", getCookieName()+"="+getCookie());
+
+			DefaultHttpClient client = new DefaultHttpClient();
+			HttpResponse response = client.execute(request);
+
+			body = EntityUtils.toString(response.getEntity());
+		} catch (Throwable e) {
 			e.printStackTrace();
-			throw new ParkeerAPIException("I/O error");
+			throw new ParkeerAPIException("Error: " + e.getMessage());
 		}
-		if (!retry && doc.toString().contains("onload=\"sessionend")) {
+		if (!retry && body.contains("onload=\"sessionend")) {
 			// renew
 			if (checkLogin() != 0) {
 				throw new ParkeerAPIException("Authorization failed");
@@ -128,14 +136,14 @@ public class ParkeerAPI {
 			return getRequest(urlpart, true);
 		}
 		
-		return doc;
+		return body;
 	}
 	
 	public List<ParkeerAPIEntry> getCurrentParkings() throws ParkeerAPIException
 	{
 		List<ParkeerAPIEntry> results = new ArrayList<ParkeerAPIEntry>();
-		
-		Document doc = getRequest("myparkings.pl");
+
+		Document doc = Jsoup.parse(getRequest("myparkings.pl"));
 		
 		Elements emptyCheck = doc.select("#main tr h2");
 		if (emptyCheck.size() == 1) {
@@ -148,9 +156,16 @@ public class ParkeerAPI {
 		
 		Elements datas = doc.select("#main tr h1.acpark");
 		Log.v("ParkeerAPI", "Nr of H1s: " + datas.size());
-		
+		int j = 0;
 		for (int i=0; i<datas.size(); i+= 7) {
+			Elements els = doc.select("#parkid" + (j+2));
+			Log.v("ParkeerAPI","#parkid" + (j+2) + " " + els.size());
+
+			Log.v("ParkeerAPI", els.toString());
+			String id = els.attr("value");
+			Log.v("ParkeerAPI", "Entry id: " + id);
 			ParkeerAPIEntry entry = new ParkeerAPIEntry(
+					id,
 					datas.get(i+0).text(),
 					datas.get(i+1).text(),
 					datas.get(i+2).text(),
@@ -160,9 +175,31 @@ public class ParkeerAPI {
 					datas.get(i+6).text()
 					);
 			results.add(entry);
+			j++;
 		}
 		
 		Log.v("ParkeerAPI", "Nr of entries: " + results.size());
 		return results;
 	}
+	
+	public String stop(ParkeerAPIEntry entry) throws ParkeerAPIException {
+		String s = getRequest("myparkings.pl?fname=endpark&args=" + entry.id);
+		int start = s.indexOf("onload=\"alert('")+18;
+		int end = s.length()-5;
+		Log.v("ParkeerAPI", s.substring(start, end));
+		return s.substring(start, end);
+	}
+	
+	public String start(String zonecode, String kenteken) throws ParkeerAPIException {
+		String s = getRequest("startpark.pl?fname=startpark" +
+				"&args=" + zonecode +
+				"&zone=" + zonecode +
+				"&args=" + kenteken +
+				"&vrn=" + kenteken);
+		
+		Log.v("ParkeerAPI", s);
+		Document doc = Jsoup.parse(s);
+		return doc.select("h1.status").text();
+	}
+
 }

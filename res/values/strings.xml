@@ -14,5 +14,10 @@
     <string name="main_zonecode">Zonecode</string>
     <string name="main_vehicle">Kenteken</string>
     <string name="main_menu_logout">Uitloggen</string>
+    <string name="main_start">Parkeren starten</string>
+    <string name="listitem_stop">Stoppen</string>
+    <string name="main_menu_reload">Verversen</string>
+    <string name="main_stopping">Parkeeractie aan het stoppen...</string>
+    <string name="main_starting">Parkeeractie aan het starten...</string>
 
 </resources>

@@ -8,7 +8,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_new" />
+        android:text="@string/main_new" android:paddingTop="20px" android:textSize="32px" android:paddingBottom="20px"/>
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -28,10 +28,12 @@
                 android:text="@string/main_zonecode" android:layout_weight="1"/>
 
             <EditText
-                android:id="@+id/editText1"
+                android:id="@+id/main_zonecode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3" >
+                android:layout_weight="3"
+                android:inputType="number"
+                android:singleLine="true" >
 
                 <requestFocus />
             </EditText>
@@ -50,12 +52,28 @@
                 android:text="@string/main_vehicle" android:layout_weight="1"/>
 
             <EditText
-                android:id="@+id/editText2"
+                android:id="@+id/main_kenteken"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3" />
+                android:layout_weight="3"
+                android:inputType="text"
+                android:singleLine="true" />
 
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/frameLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="@string/main_start" android:onClick="startParking"/>
+
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -63,10 +81,16 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_current" />
+        android:text="@string/main_current" android:paddingTop="20px" android:textSize="32px" android:paddingBottom="20px"/>
+
+    <TextView
+        android:id="@+id/main_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startup_busy" />
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/main_current_parkings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
