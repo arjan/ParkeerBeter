@@ -15,7 +15,7 @@ public class StartupActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup);
-        
+          
         this.pd = ProgressDialog.show(this, 
         		getString(R.string.startup_busy), 
         		getString(R.string.startup_login), 

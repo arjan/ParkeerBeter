@@ -239,15 +239,15 @@ public class MainActivity extends Activity {
         	AlertDialog alert = builder.create();
     		alert.show();
         }
-    }
+    } 
 
 	private void makeNotification(ParkeerAPIEntry e) {
-		// Make a notification for this parkeer actie
+		// Make a notification for this parkeer actie 
 		NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
 	    Intent intent = getPackageManager().getLaunchIntentForPackage("nl.miraclethings.parkeerbeter");
 	    intent.addCategory(Intent.CATEGORY_LAUNCHER);
-	    
+  	    
 		PendingIntent i = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		String txt = "Parkeeractie actief: " + e.kenteken;
 		Notification n = new Notification(R.drawable.ic_status, txt, System.currentTimeMillis());
