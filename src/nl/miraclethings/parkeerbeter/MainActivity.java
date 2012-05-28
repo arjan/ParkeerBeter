@@ -4,11 +4,15 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +24,9 @@ public class MainActivity extends Activity {
 
 	private ParkeerAPI api;
 	private ProgressDialog pd;
-
+	private boolean needReloadAfterStopCancel = false;
+	
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,7 @@ public class MainActivity extends Activity {
         
         api = new ParkeerAPI(getSharedPreferences("ParkeerBeter", MODE_PRIVATE));
 
-        reloadCurrentParkings();
+		reloadCurrentParkings();
         
     	((EditText)findViewById(R.id.main_zonecode)).setText(getPreferences(MODE_PRIVATE).getString("zonecode", ""));
     	((EditText)findViewById(R.id.main_kenteken)).setText(getPreferences(MODE_PRIVATE).getString("kenteken", ""));
@@ -84,11 +90,33 @@ public class MainActivity extends Activity {
     
     
     public void stopParking(ParkeerAPIEntry entry) {
-        this.pd = ProgressDialog.show(this, 
-        		getString(R.string.startup_busy), 
-        		getString(R.string.main_stopping),  
-        		true, false);
-        new StopParkingTask().execute(entry);
+    	
+    	final ParkeerAPIEntry myEntry = entry;
+    	AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+    	
+    	builder.setMessage("Parkeeractie stoppen voor " + entry.kenteken + ", " + entry.locatie + "?")
+    	       .setCancelable(false)
+    	       .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int id) {
+    	        	   dialog.cancel();
+    	        	   
+    	               MainActivity.this.pd = ProgressDialog.show(MainActivity.this, 
+    	               		getString(R.string.startup_busy), 
+    	               		getString(R.string.main_stopping),  
+    	               		true, false);
+    	               new StopParkingTask().execute(myEntry);
+    	           }
+    	       })
+    	       .setNegativeButton("Nee", new DialogInterface.OnClickListener() {
+    	           public void onClick(DialogInterface dialog, int id) {
+    	        	   dialog.cancel();
+    	        	   if (MainActivity.this.needReloadAfterStopCancel) 
+    	        		   MainActivity.this.reloadCurrentParkings();
+    	           }
+    	       });
+    	       
+    	AlertDialog alert = builder.create();
+		alert.show();
     }
     
 
@@ -123,6 +151,10 @@ public class MainActivity extends Activity {
         	ListView v = (ListView)MainActivity.this.findViewById(R.id.main_current_parkings);
         	ParkeerAPIEntry d[] = new ParkeerAPIEntry[results.size()];
         	v.setAdapter(new ParkeerAPIEntryAdapter(MainActivity.this, results.toArray(d)));
+        	
+        	for (ParkeerAPIEntry e : results) {
+        		MainActivity.this.makeNotification(e);
+        	}
         }
     
     }
@@ -135,7 +167,11 @@ public class MainActivity extends Activity {
 			ParkeerAPIEntry entry = params[0];
 			
 			try {
-				return MainActivity.this.api.stop(entry);
+				String result = MainActivity.this.api.stop(entry);
+				NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+				nm.cancel(entry.id, 1);
+				return result;
+				
 			} catch (ParkeerAPIException e) {
 				MainActivity.this.logout(R.string.login_unexpected);
 				return null;
@@ -204,4 +240,24 @@ public class MainActivity extends Activity {
     		alert.show();
         }
     }
+
+	private void makeNotification(ParkeerAPIEntry e) {
+		// Make a notification for this parkeer actie
+		NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+
+	    Intent intent = getPackageManager().getLaunchIntentForPackage("nl.miraclethings.parkeerbeter");
+	    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+	    
+		PendingIntent i = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		String txt = "Parkeeractie actief: " + e.kenteken;
+		Notification n = new Notification(R.drawable.ic_status, txt, System.currentTimeMillis());
+
+		n.setLatestEventInfo(this, e.kenteken + " - " + e.locatie, 
+				"Geparkeerd vanaf " + e.gestart, i); 
+		n.defaults = Notification.DEFAULT_LIGHTS;
+		n.flags = Notification.FLAG_ONGOING_EVENT;
+		
+		nm.notify(e.id, 1, n);
+		
+	}
 }

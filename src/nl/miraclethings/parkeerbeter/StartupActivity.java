@@ -34,6 +34,9 @@ public class StartupActivity extends Activity {
 			intent.putExtra("reason", result);
 		} else {
 			intent = new Intent("nl.miraclethings.parkeerbeter.MAIN");
+			if (getIntent().getExtras() != null) {
+				intent.putExtra("stop", getIntent().getExtras().getString("stop"));
+			}
 		}
 		finish();
 		startActivity(intent);
