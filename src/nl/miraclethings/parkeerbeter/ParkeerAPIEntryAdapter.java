@@ -47,7 +47,7 @@ public class ParkeerAPIEntryAdapter extends ArrayAdapter<ParkeerAPIEntry>{
         }
        
         final ParkeerAPIEntry entry = data[position];
-
+ 
         holder.kenteken.setText(entry.kenteken);
         holder.line1.setText(entry.gestart);
         holder.line2.setText(entry.stad + ", " + entry.locatie);
@@ -59,7 +59,7 @@ public class ParkeerAPIEntryAdapter extends ArrayAdapter<ParkeerAPIEntry>{
 			}});
         return row;
     }
-   
+    
     static class EntryHolder
     {
         Button button;

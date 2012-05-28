@@ -38,10 +38,12 @@ public class StartupActivity extends Activity {
 				intent.putExtra("stop", getIntent().getExtras().getString("stop"));
 			}
 		}
-		finish();
+
 		startActivity(intent);
+		finish();
 	}
-    
+
+	
     private class CheckLogonTask extends AsyncTask<String, Void, Integer> {
 
 		protected Integer doInBackground(String... params) {

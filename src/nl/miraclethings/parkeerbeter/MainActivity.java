@@ -30,6 +30,9 @@ public class MainActivity extends Activity {
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	
+    	Log.v("ParkeerAPI", "MainActivity starting");
+    	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
@@ -86,6 +89,7 @@ public class MainActivity extends Activity {
 		intent = new Intent("nl.miraclethings.parkeerbeter.LOGIN");
 		intent.putExtra("reason", reason);
 		startActivity(intent);
+		finish();
     }
     
     
