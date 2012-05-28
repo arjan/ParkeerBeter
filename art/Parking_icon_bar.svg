@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="128"
+   height="128"
+   id="svg5433"
+   sodipodi:version="0.32"
+   inkscape:version="0.48.3.1 r9886"
+   version="1.0"
+   sodipodi:docname="Parking_icon_bar.svg"
+   inkscape:export-filename="/home/arjan/workspace/ParkeerBeter/art/Parking_icon.png"
+   inkscape:export-xdpi="67.5"
+   inkscape:export-ydpi="67.5">
+  <defs
+     id="defs5435" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.3698058"
+     inkscape:cx="54.642174"
+     inkscape:cy="100.67895"
+     inkscape:document-units="cm"
+     inkscape:current-layer="layer1"
+     inkscape:grid-points="true"
+     inkscape:grid-bbox="false"
+     grid_units="cm"
+     showgrid="false"
+     height="128px"
+     width="128px"
+     inkscape:window-width="1089"
+     inkscape:window-height="1163"
+     inkscape:window-x="0"
+     inkscape:window-y="19"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       id="GridFromPre046Settings"
+       type="xygrid"
+       originx="0px"
+       originy="0px"
+       spacingx="0.5cm"
+       spacingy="0.5cm"
+       color="#3f3fff"
+       empcolor="#3f3fff"
+       opacity="0.15"
+       empopacity="0.38"
+       empspacing="5" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5438">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="font-size:144px;font-style:normal;font-weight:bold;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:DejaVu Sans"
+       d="m 20.792968,11.511719 44.929687,0 c 13.359304,1.05e-4 23.601481,2.976664 30.726563,8.929687 7.171772,5.90634 10.757712,14.343832 10.757812,25.3125 -1e-4,11.015685 -3.58604,19.500051 -10.757812,25.453125 -7.125082,5.90629 -17.367259,8.859413 -30.726563,8.859375 l -17.859375,0 0,36.421874 -27.070312,0 0,-104.976561 m 27.070312,19.617187 0,29.320313 14.976563,0 c 5.249939,5.6e-5 9.304623,-1.265568 12.164062,-3.796875 2.859305,-2.578063 4.288991,-6.210872 4.289063,-10.898438 -7.2e-5,-4.687424 -1.429758,-8.296796 -4.289063,-10.828125 -2.859439,-2.531166 -6.914123,-3.796789 -12.164062,-3.796875 l -14.976563,0"
+       id="text1871"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

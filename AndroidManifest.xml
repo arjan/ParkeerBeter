@@ -12,7 +12,7 @@
         android:label="@string/app_name" >
         <activity
             android:name=".StartupActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -21,7 +21,7 @@
         
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="nl.miraclethings.parkeerbeter.LOGIN" />
 				<category android:name="android.intent.category.DEFAULT" />
@@ -30,7 +30,7 @@
         
                 <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="nl.miraclethings.parkeerbeter.MAIN" />
 				<category android:name="android.intent.category.DEFAULT" />

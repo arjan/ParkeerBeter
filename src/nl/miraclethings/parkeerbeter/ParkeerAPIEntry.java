@@ -11,7 +11,8 @@ public class ParkeerAPIEntry {
 	public String stad;
 	public String gestart;
 	
-	public ParkeerAPIEntry(String id, String telefoon, String gebruiker, String kenteken, String zonecode, 
+	public ParkeerAPIEntry(String id, String telefoon, String gebruiker, 
+			String kenteken, String zonecode, 
 			String locatie, String stad, String gestart) 
 	{
 		this.id = id;

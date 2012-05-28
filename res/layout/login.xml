@@ -4,6 +4,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+  <include layout="@layout/logo_top" 
+		android:layout_width="match_parent"
+        android:layout_height="wrap_content"      
+        />
+    
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20px"
+        android:paddingTop="20px"
+        android:text="@string/login_title"
+        android:textSize="32px" />
+
     <TextView
         android:id="@+id/reasonText"
         android:layout_width="match_parent"

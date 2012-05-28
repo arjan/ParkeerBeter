@@ -19,5 +19,6 @@
     <string name="main_menu_reload">Verversen</string>
     <string name="main_stopping">Parkeeractie aan het stoppen...</string>
     <string name="main_starting">Parkeeractie aan het starten...</string>
+    <string name="login_title">Inloggen</string>
 
 </resources>

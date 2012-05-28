@@ -140,7 +140,7 @@ public class MainActivity extends Activity {
 				MainActivity.this.logout(R.string.login_unexpected);
 				return null;
 			}
-		}
+		}   
 		
         protected void onPostExecute(String message) {
         	MainActivity.this.pd.dismiss();
