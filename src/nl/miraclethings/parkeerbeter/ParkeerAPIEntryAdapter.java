@@ -1,8 +1,6 @@
 package nl.miraclethings.parkeerbeter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,7 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ParkeerAPIEntryAdapter extends ArrayAdapter<ParkeerAPIEntry>{
+public class ParkeerAPIEntryAdapter extends ArrayAdapter<ParkeerAPIEntry>
+{
 
     MainActivity context;
     ParkeerAPIEntry data[] = null;
@@ -24,40 +23,29 @@ public class ParkeerAPIEntryAdapter extends ArrayAdapter<ParkeerAPIEntry>{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        EntryHolder holder = null;
-       
-        if(row == null)
-        {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-            row = inflater.inflate(R.layout.listitem, parent, false);
+        View view;
+
+        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        view = inflater.inflate(R.layout.listitem, parent, false);
            
-            holder = new EntryHolder();
-            
-            holder.button = (Button)row.findViewById(R.id.listitem_button);
-            holder.kenteken= (TextView)row.findViewById(R.id.listitem_kenteken);
-            holder.line1= (TextView)row.findViewById(R.id.listitem_line1);
-            holder.line2= (TextView)row.findViewById(R.id.listitem_line2);
+        Button button = (Button)view.findViewById(R.id.listitem_button);
+        TextView kenteken= (TextView)view.findViewById(R.id.listitem_kenteken);
+        TextView line1= (TextView)view.findViewById(R.id.listitem_line1);
+        TextView line2= (TextView)view.findViewById(R.id.listitem_line2);
            
-            row.setTag(holder);
-        }
-        else
-        {
-            holder = (EntryHolder)row.getTag();
-        }
-       
         final ParkeerAPIEntry entry = data[position];
  
-        holder.kenteken.setText(entry.kenteken);
-        holder.line1.setText(entry.gestart);
-        holder.line2.setText(entry.stad + ", " + entry.locatie);
+        kenteken.setText(entry.kenteken);
+        line1.setText(entry.gestart);
+        line2.setText(entry.stad + ", " + entry.locatie);
 
-        holder.button.setOnClickListener(new OnClickListener() {
+        button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				ParkeerAPIEntryAdapter.this.context.stopParking(entry);
 			}});
-        return row;
+        return view;
+        
     }
     
     static class EntryHolder

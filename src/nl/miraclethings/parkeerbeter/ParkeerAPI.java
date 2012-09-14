@@ -1,18 +1,24 @@
 package nl.miraclethings.parkeerbeter;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
@@ -61,6 +67,23 @@ public class ParkeerAPI {
 			.commit();
 	}
 
+	public DefaultHttpClient getClient() {
+	    HostnameVerifier hostnameVerifier = org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+	
+	    DefaultHttpClient client = new DefaultHttpClient();
+	
+	    SchemeRegistry registry = new SchemeRegistry();
+	    SSLSocketFactory socketFactory = SSLSocketFactory.getSocketFactory();
+	    socketFactory.setHostnameVerifier((X509HostnameVerifier) hostnameVerifier);
+	    registry.register(new Scheme("https", socketFactory, 443));
+	    SingleClientConnManager mgr = new SingleClientConnManager(client.getParams(), registry);
+	
+	    // Set verifier      
+	    HttpsURLConnection.setDefaultHostnameVerifier(hostnameVerifier);
+
+	    return new DefaultHttpClient(mgr, client.getParams());
+	}	
+	
 	public int checkLogin()
 	{
 		if (getUsername().length() == 0) {

@@ -20,5 +20,6 @@
     <string name="main_stopping">Parkeeractie aan het stoppen...</string>
     <string name="main_starting">Parkeeractie aan het starten...</string>
     <string name="login_title">Inloggen</string>
+    <string name="kies_zonecode">Kies zonecode</string><string name="kies_kenteken">Kies kenteken</string>
 
 </resources>

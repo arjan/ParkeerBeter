@@ -23,25 +23,25 @@ public class StartupActivity extends Activity {
         new CheckLogonTask().execute();
     }
 
-	public void loaded(int result) {
-		this.pd.dismiss();
+    public void loaded(int result) {
+        this.pd.dismiss();
 		
-		Intent intent = null;
+        Intent intent = null;
 		
-		if (result != 0) {  
-			intent = new Intent("nl.miraclethings.parkeerbeter.LOGIN");
-			Log.v(StartupActivity.class.toString(), "Result: " + result);
-			intent.putExtra("reason", result);
-		} else {
-			intent = new Intent("nl.miraclethings.parkeerbeter.MAIN");
-			if (getIntent().getExtras() != null) {
-				intent.putExtra("stop", getIntent().getExtras().getString("stop"));
-			}
-		}
-
-		startActivity(intent);
-		finish();
-	}
+        if (result != 0) {  
+            intent = new Intent("nl.miraclethings.parkeerbeter.LOGIN");
+            Log.v(StartupActivity.class.toString(), "Result: " + result);
+            intent.putExtra("reason", result);
+        } else {
+            intent = new Intent("nl.miraclethings.parkeerbeter.MAIN");
+            if (getIntent().getExtras() != null) {
+                intent.putExtra("stop", getIntent().getExtras().getString("stop"));
+            }
+        }
+ 
+        startActivity(intent);
+        finish();
+    }
 
 	
     private class CheckLogonTask extends AsyncTask<String, Void, Integer> {
