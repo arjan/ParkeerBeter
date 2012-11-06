@@ -1,11 +1,19 @@
 package nl.miraclethings.parkeerbeter;
 
 import java.io.UnsupportedEncodingException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import nl.miraclethings.parkeerbeter.data.ZoneMarker;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -22,15 +30,24 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Base64;
 import android.util.Log;
+
+import com.google.android.maps.GeoPoint;
 
 public class ParkeerAPI {
 	private static final String BASE_URL = "https://sas.smsparking.nl/";
+	
+	private static final String LOCATION_URL = "https://i.smsparking.nl/1/zots";
+	
 	private SharedPreferences pref;
 
 	public ParkeerAPI(SharedPreferences pref) {
@@ -225,4 +242,44 @@ public class ParkeerAPI {
 		return doc.select("h1.status").text();
 	}
 
+	public List<ZoneMarker> queryLocations(Context context, GeoPoint center) {
+		try {
+			String url = LOCATION_URL+"?lat=" + Double.toString(center.getLatitudeE6()/1e6) + "&lgt=" + Double.toString(center.getLongitudeE6()/1e6);
+			Log.v("ParkeerAPI", url);
+			
+			HttpGet request = new HttpGet(url);
+			String auth = "Basic " + Base64.encodeToString(
+					new String(getUsername() + ":" + getPassword()).getBytes(), Base64.DEFAULT);
+			
+			Log.v("ParkeerAPI", auth);
+			request.addHeader("Authorization", auth);
+
+			DefaultHttpClient client = new HttpsClient(context);
+			client.getParams().setBooleanParameter("http.protocol.expect-continue", false);
+
+			HttpResponse response = client.execute(request);
+	
+			String body = EntityUtils.toString(response.getEntity());
+			Log.v("ParkeerAPI", body);
+
+			JSONArray l = new JSONArray(body);
+
+			List<ZoneMarker> locations = new ArrayList<ZoneMarker>();
+			for (int i=0; i<l.length(); i++) {
+				JSONObject o = l.getJSONObject(i);
+				ZoneMarker marker = new ZoneMarker(o.getString("zonecode"),
+											  o.getString("name"),
+											  Double.parseDouble(o.getString("lat")),
+											  Double.parseDouble(o.getString("lgt")));
+				locations.add(marker);
+			}
+			Log.v("ParkeerAPI", "Num: " + locations.size());
+			return locations;
+			
+		} catch (Throwable e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 }

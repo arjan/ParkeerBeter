@@ -1,0 +1,1 @@
+curl -u acscherp:parkeren1 -k -vv 'https://i.smsparking.nl/1/zots?lat=52.3535579&lgt=4.9125292'

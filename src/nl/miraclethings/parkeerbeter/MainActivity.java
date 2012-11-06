@@ -1,6 +1,11 @@
 package nl.miraclethings.parkeerbeter;
 
+import java.io.Serializable;
 import java.util.List;
+
+import com.google.android.maps.GeoPoint;
+
+import nl.miraclethings.parkeerbeter.data.ZoneMarker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,6 +15,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,13 +32,16 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-    private ParkeerAPI api;
+    private static final int REQ_ZONECODE = 0x34;
+	private ParkeerAPI api;
     private ProgressDialog pd;
     private boolean needReloadAfterStopCancel = false;
         
     private RecentPreferenceList recentZonecodes;
     private RecentPreferenceList recentKentekens;
-        
+	private LocationService mLocationService;
+	private GeoPoint mLocation;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,8 +58,25 @@ public class MainActivity extends Activity {
         recentZonecodes = new RecentPreferenceList(getPreferences(MODE_PRIVATE), "zonecode");
         recentKentekens = new RecentPreferenceList(getPreferences(MODE_PRIVATE), "kenteken");
         
-        ((EditText)findViewById(R.id.main_zonecode)).setText(recentZonecodes.mostRecent());
-        ((EditText)findViewById(R.id.main_kenteken)).setText(recentKentekens.mostRecent());
+        EditText zonecode = ((EditText)findViewById(R.id.main_zonecode));
+        zonecode.setText(recentZonecodes.mostRecent());
+        zonecode.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				MainActivity.this.selectZonecode();
+				return true;
+			}
+		});
+        
+        EditText kenteken = ((EditText)findViewById(R.id.main_kenteken));
+        kenteken.setText(recentKentekens.mostRecent());
+        kenteken.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				MainActivity.this.selectKenteken();
+				return true;
+			}
+		});
 
         ((Button)findViewById(R.id.kenteken_button)).setOnClickListener(new OnClickListener(){
 			@Override
@@ -60,8 +86,32 @@ public class MainActivity extends Activity {
         ((Button)findViewById(R.id.zonecode_button)).setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				MainActivity.this.selectZonecode();
+				new GetZonesTask().execute();
 			}});
+        
+        mLocationService = new LocationService(this);
+    }
+    
+    @Override
+    protected void onStop() {
+    	mLocationService.onStop();
+    	super.onStop();
+    }
+    
+    protected void showMap(List<ZoneMarker> markers) {
+    	Intent i = new Intent(getApplicationContext(), SelectZoneActivity.class);
+    	i.putExtra("point", (Serializable)mLocation);
+    	i.putExtra("markers", (Serializable)markers);
+    	
+    	startActivityForResult(i, REQ_ZONECODE);
+    } 
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (requestCode == REQ_ZONECODE) {
+    		Log.v("map", "Yes");
+    	}
+    	super.onActivityResult(requestCode, resultCode, data);
     }
     
     protected void selectKenteken() {
@@ -298,7 +348,7 @@ public class MainActivity extends Activity {
             alert.show();
         }
     } 
- 
+  
     private void makeNotification(ParkeerAPIEntry e) {
         // Make a notification for this parkeer actie 
         NotificationManager nm = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
@@ -317,4 +367,35 @@ public class MainActivity extends Activity {
         nm.notify(e.id, 1, n);
                 
     }
+
+	public void setLocation(Location location) {
+		Log.v("Main", "Got location " + location.toString());
+		mLocation = new GeoPoint((int)(location.getLatitude()*1e6), (int)(location.getLongitude()*1e6));
+	}
+	
+	
+    class GetZonesTask extends AsyncTask<Void, Void, List<ZoneMarker>>
+    {
+    	@Override
+    	protected void onPreExecute() {
+            MainActivity.this.pd = ProgressDialog.show(
+            		MainActivity.this, 
+                    getString(R.string.startup_busy), 
+                    getString(R.string.main_starting),  
+                    true, false);
+    	}
+    	
+    	@Override
+    	protected List<ZoneMarker> doInBackground(Void... params) {
+    		return api.queryLocations(MainActivity.this, mLocation);
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(List<ZoneMarker> result) {
+    		if (result == null) return;
+    		
+    		MainActivity.this.pd.dismiss();
+    		MainActivity.this.showMap(result);
+    	}
+    }	
 }
