@@ -1,5 +1,6 @@
 package nl.miraclethings.parkeerbeter;
 
+import nl.miraclethings.parkeerbeter.api.ParkeerAPI;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;

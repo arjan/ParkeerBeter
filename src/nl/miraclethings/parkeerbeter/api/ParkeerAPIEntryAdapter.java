@@ -1,5 +1,7 @@
-package nl.miraclethings.parkeerbeter;
+package nl.miraclethings.parkeerbeter.api;
 
+import nl.miraclethings.parkeerbeter.MainActivity;
+import nl.miraclethings.parkeerbeter.R;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;

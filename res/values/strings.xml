@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ParkeerBeter</string>
-    <string name="startup_busy">Bezig...</string>
+    <string name="startup_busy">Bezig…</string>
     <string name="startup_login">Aan het inloggen…</string>
     <string name="login_needcredentials">Om in te loggen heb je een gebruikersnaam / wachtwoord nodig van smsparkeren.nl.</string>
     <string name="login_fail">Het inloggen is mislukt…</string>
@@ -20,5 +20,9 @@
     <string name="main_stopping">Parkeeractie aan het stoppen…</string>
     <string name="main_starting">Parkeeractie aan het starten…</string>
     <string name="login_title">Inloggen</string>
-    <string name="kies_zonecode">Kies zonecode</string><string name="kies_kenteken">Kies kenteken</string>
+    <string name="kies_zonecode">Kies zonecode</string>
+    <string name="kies_kenteken">Kies kenteken</string>
+    <string name="select_zone">Selecteer zone</string>
+    <string name="kies">Kies zone</string>
+    <string name="kaart_laden">Kaart aan het laden...</string>
 </resources>

@@ -1,5 +1,6 @@
-package nl.miraclethings.parkeerbeter;
+package nl.miraclethings.parkeerbeter.map;
 
+import nl.miraclethings.parkeerbeter.MainActivity;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;

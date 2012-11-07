@@ -3,10 +3,14 @@ package nl.miraclethings.parkeerbeter;
 import java.io.Serializable;
 import java.util.List;
 
-import com.google.android.maps.GeoPoint;
-
-import nl.miraclethings.parkeerbeter.data.ZoneMarker;
-
+import nl.miraclethings.parkeerbeter.api.ParkeerAPI;
+import nl.miraclethings.parkeerbeter.api.ParkeerAPIEntry;
+import nl.miraclethings.parkeerbeter.api.ParkeerAPIEntryAdapter;
+import nl.miraclethings.parkeerbeter.api.ParkeerAPIException;
+import nl.miraclethings.parkeerbeter.map.LocationService;
+import nl.miraclethings.parkeerbeter.map.ParkeerGeoPoint;
+import nl.miraclethings.parkeerbeter.map.SelectZoneActivity;
+import nl.miraclethings.parkeerbeter.map.ZoneMarker;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -27,7 +31,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -40,7 +43,7 @@ public class MainActivity extends Activity {
     private RecentPreferenceList recentZonecodes;
     private RecentPreferenceList recentKentekens;
 	private LocationService mLocationService;
-	private GeoPoint mLocation;
+	private ParkeerGeoPoint mLocation;
     
     /** Called when the activity is first created. */
     @Override
@@ -108,8 +111,10 @@ public class MainActivity extends Activity {
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if (requestCode == REQ_ZONECODE) {
-    		Log.v("map", "Yes");
+    	if (requestCode == REQ_ZONECODE && resultCode == RESULT_OK) {
+    		ZoneMarker zone = (ZoneMarker)data.getSerializableExtra("result");
+    		Log.v("map", "Yes: " + zone.zonecode);
+    		((EditText)findViewById(R.id.main_zonecode)).setText(zone.zonecode);
     	}
     	super.onActivityResult(requestCode, resultCode, data);
     }
@@ -370,7 +375,7 @@ public class MainActivity extends Activity {
 
 	public void setLocation(Location location) {
 		Log.v("Main", "Got location " + location.toString());
-		mLocation = new GeoPoint((int)(location.getLatitude()*1e6), (int)(location.getLongitude()*1e6));
+		mLocation = new ParkeerGeoPoint((int)(location.getLatitude()*1e6), (int)(location.getLongitude()*1e6));
 	}
 	
 	
@@ -381,13 +386,13 @@ public class MainActivity extends Activity {
             MainActivity.this.pd = ProgressDialog.show(
             		MainActivity.this, 
                     getString(R.string.startup_busy), 
-                    getString(R.string.main_starting),  
+                    getString(R.string.kaart_laden),  
                     true, false);
     	}
     	
     	@Override
     	protected List<ZoneMarker> doInBackground(Void... params) {
-    		return api.queryLocations(MainActivity.this, mLocation);
+    		return api.queryLocations(MainActivity.this, mLocation.getPoint());
     	}
     	
     	@Override

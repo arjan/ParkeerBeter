@@ -1,4 +1,4 @@
-package nl.miraclethings.parkeerbeter;
+package nl.miraclethings.parkeerbeter.api;
 
 public class ParkeerAPIException extends Exception {
 

@@ -1,19 +1,14 @@
-package nl.miraclethings.parkeerbeter;
+package nl.miraclethings.parkeerbeter.api;
 
 import java.io.UnsupportedEncodingException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
-import nl.miraclethings.parkeerbeter.data.ZoneMarker;
+import nl.miraclethings.parkeerbeter.R;
+import nl.miraclethings.parkeerbeter.map.ZoneMarker;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -31,6 +26,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -250,30 +246,38 @@ public class ParkeerAPI {
 			HttpGet request = new HttpGet(url);
 			String auth = "Basic " + Base64.encodeToString(
 					new String(getUsername() + ":" + getPassword()).getBytes(), Base64.DEFAULT);
-			
-			Log.v("ParkeerAPI", auth);
-			request.addHeader("Authorization", auth);
+			request.addHeader("Authorization", auth.trim());
 
 			DefaultHttpClient client = new HttpsClient(context);
+			
+			Log.v("ParkeerAPI", request.getRequestLine().toString());
+			Log.v("ParkeerAPI", auth);
+			
 			client.getParams().setBooleanParameter("http.protocol.expect-continue", false);
-
 			HttpResponse response = client.execute(request);
 	
 			String body = EntityUtils.toString(response.getEntity());
-			Log.v("ParkeerAPI", body);
+			//Log.v("ParkeerAPI", body);
 
 			JSONArray l = new JSONArray(body);
 
 			List<ZoneMarker> locations = new ArrayList<ZoneMarker>();
+			Log.v("ParkeerAPI", "Num: " + l.length());
 			for (int i=0; i<l.length(); i++) {
-				JSONObject o = l.getJSONObject(i);
+				
+				JSONObject o = null;
+				try { o = (JSONObject)l.get(i); } catch (JSONException e) { continue; }
+				if (o == null || !o.has("zonecode") || o.getString("zonecode") == null) continue;
+				
+				Log.v("XX", o.toString());
+
 				ZoneMarker marker = new ZoneMarker(o.getString("zonecode"),
 											  o.getString("name"),
 											  Double.parseDouble(o.getString("lat")),
 											  Double.parseDouble(o.getString("lgt")));
 				locations.add(marker);
 			}
-			Log.v("ParkeerAPI", "Num: " + locations.size());
+			
 			return locations;
 			
 		} catch (Throwable e) {

@@ -1,4 +1,4 @@
-package nl.miraclethings.parkeerbeter.data;
+package nl.miraclethings.parkeerbeter.map;
 
 import java.io.Serializable;
 
@@ -11,11 +11,19 @@ public class ZoneMarker extends Object implements Serializable {
 	public String zonecode;
 	public String name;
 	public GeoPoint point;
+
+	private double longitude;
+	private double latitude;
 	
 	public ZoneMarker(String zonecode, String name, double latitude, double longitude) {
 		this.zonecode = zonecode;
 		this.name = name;
-		this.point = new GeoPoint((int)(latitude*1e6), (int)(longitude));
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+	
+	public GeoPoint getPoint() {
+		return new GeoPoint((int)(this.latitude*1e6), (int)(this.longitude*1e6));
 	}
 	
 }
