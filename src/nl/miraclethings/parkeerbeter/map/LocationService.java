@@ -5,11 +5,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 public class LocationService {
+	private static final String TAG = "LocationService";
 	private MainActivity mContext;
 	private LocationManager mLocationManager;
 	private LocationListener mListener;
+	private boolean mIsManaging;
 
 	public LocationService(final MainActivity context) {
 		mContext = context;
@@ -40,20 +43,25 @@ public class LocationService {
 			}
 		};
 		
-		context.setLocation(mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER));
-
-//		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-//		        30000,          // 10-second interval.
-//		        50,             // 10 meters.
-//		        mListener);
-		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-		        10000,          // 10-second interval.
-		        50,             // 10 meters.
-		        mListener);
-			
+		Location loc = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		if (loc != null) {
+			context.setLocation(loc);
+		}
+		
+		mIsManaging = false;
+		try {
+			mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+			        10000,          // 10-second interval.
+			        50,             // 10 meters.
+			        mListener);
+			mIsManaging = true;
+		} catch (IllegalArgumentException e) {
+			Log.e(TAG, "Error requesting location updates; bailing out");
+		}
 	}
 	
 	public void onStop() {
-		mLocationManager.removeUpdates(mListener);
+		if (mIsManaging)
+			mLocationManager.removeUpdates(mListener);
 	}
 }

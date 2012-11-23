@@ -17,7 +17,8 @@
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:apiKey="0HO2D6VrJGnvwU44uVcVBq_OOKwVaSfcbKQ-fCA"
+        android:apiKey="0HO2D6VrJGnuc7GwKodYO7_eZdfwDJdHq3Xbtpw"
         android:clickable="true" />
-
-</LinearLayout><!-- for release: android:apiKey="0HO2D6VrJGnuc7GwKodYO7_eZdfwDJdHq3Xbtpw" -->
+</LinearLayout>
+<!-- for release: android:apiKey="0HO2D6VrJGnuc7GwKodYO7_eZdfwDJdHq3Xbtpw" -->
+<!--  debug:  android:apiKey="0HO2D6VrJGnvwU44uVcVBq_OOKwVaSfcbKQ-fCA" -->

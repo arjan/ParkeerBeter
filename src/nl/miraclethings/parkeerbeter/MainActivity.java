@@ -93,6 +93,8 @@ public class MainActivity extends Activity {
 			}});
         
         mLocationService = new LocationService(this);
+        
+        mLocation = new ParkeerGeoPoint(52373056, 4892222);
     }
     
     @Override
@@ -374,6 +376,7 @@ public class MainActivity extends Activity {
     }
 
 	public void setLocation(Location location) {
+		if (location == null) return;
 		Log.v("Main", "Got location " + location.toString());
 		mLocation = new ParkeerGeoPoint((int)(location.getLatitude()*1e6), (int)(location.getLongitude()*1e6));
 	}
