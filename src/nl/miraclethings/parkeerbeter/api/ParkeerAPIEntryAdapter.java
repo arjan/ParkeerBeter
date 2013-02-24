@@ -3,6 +3,7 @@ package nl.miraclethings.parkeerbeter.api;
 import nl.miraclethings.parkeerbeter.MainActivity;
 import nl.miraclethings.parkeerbeter.R;
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,8 +37,8 @@ public class ParkeerAPIEntryAdapter extends ArrayAdapter<ParkeerAPIEntry>
         TextView line2= (TextView)view.findViewById(R.id.listitem_line2);
            
         final ParkeerAPIEntry entry = data[position];
- 
-        kenteken.setText(entry.kenteken);
+
+        kenteken.setText(entry.kenteken.toUpperCase());
         line1.setText(entry.gestart);
         line2.setText(entry.stad + ", " + entry.locatie);
 

@@ -193,22 +193,22 @@ public class ParkeerAPI {
 		Elements datas = doc.select("#main tr h1.acpark");
 		Log.v("ParkeerAPI", "Nr of H1s: " + datas.size());
 		int j = 0;
-		for (int i=0; i<datas.size(); i+= 7) {
+		for (int i=0; i<datas.size(); i+= 9) {
 			Elements els = doc.select("#parkid" + (j+2));
 			Log.v("ParkeerAPI","#parkid" + (j+2) + " " + els.size());
 
 			Log.v("ParkeerAPI", els.toString());
 			String id = els.attr("value");
-			Log.v("ParkeerAPI", "Entry id: " + id);
+			Log.v("ParkeerAPI", "Entry id: " + id + " " + datas.get(i+2).text());
 			ParkeerAPIEntry entry = new ParkeerAPIEntry(
 					id,
 					datas.get(i+0).text(),
 					datas.get(i+1).text(),
 					datas.get(i+2).text(),
-					datas.get(i+3).text(),
-					datas.get(i+4).text(),
 					datas.get(i+5).text(),
-					datas.get(i+6).text()
+					datas.get(i+6).text(),
+					datas.get(i+7).text(),
+					datas.get(i+8).text()
 					);
 			results.add(entry);
 			j++;
